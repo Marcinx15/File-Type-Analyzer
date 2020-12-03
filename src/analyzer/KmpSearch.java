@@ -1,32 +1,38 @@
 package analyzer;
 
+import java.util.List;
+
 public class KmpSearch implements SearchingStrategy {
 
     @Override
-    public boolean search(String text, String pattern) {
-        int[] border = borderFunction(pattern);
-        int patternIndex = 0;
+    public Pattern search(String text, List<Pattern> patterns) {
+        for(Pattern elem : patterns) {
+            String pattern = elem.getPattern();
 
-        for (int i = 0; i < text.length(); i++) {
-            while (patternIndex > 0) {
-                if (text.charAt(i) == pattern.charAt(patternIndex)) {
-                    patternIndex++;
-                    break;
-                } else {
-                    patternIndex = border[patternIndex - 1];
+            int[] border = borderFunction(pattern);
+            int patternIndex = 0;
+
+            for (int i = 0; i < text.length(); i++) {
+                while (patternIndex > 0) {
+                    if (text.charAt(i) == pattern.charAt(patternIndex)) {
+                        patternIndex++;
+                        break;
+                    } else {
+                        patternIndex = border[patternIndex - 1];
+                    }
                 }
-            }
 
-            if (patternIndex == 0 && text.charAt(i) == pattern.charAt(patternIndex)) {
-                patternIndex++;
-            }
+                if (patternIndex == 0 && text.charAt(i) == pattern.charAt(patternIndex)) {
+                    patternIndex++;
+                }
 
-            if (patternIndex == pattern.length()) {
-                return true;
+                if (patternIndex == pattern.length()) {
+                    return elem;
+                }
             }
         }
 
-        return false;
+        return null;
     }
 
     private int[] borderFunction(String word) {

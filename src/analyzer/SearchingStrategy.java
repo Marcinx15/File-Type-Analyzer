@@ -1,8 +1,10 @@
 package analyzer;
 
+import java.util.List;
+
 @FunctionalInterface
 public interface SearchingStrategy {
-    boolean search(String text, String pattern);
+    Pattern search(String text, List<Pattern> patterns);
 
     static SearchingStrategy getInstance(String algorithm) {
         switch (algorithm) {
