@@ -1,11 +1,12 @@
 package analyzer;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SimpleSearch implements SearchingStrategy {
 
     @Override
-    public Pattern search(String text, List<Pattern> patterns) {
+    public Optional<Pattern> search(String text, List<Pattern> patterns) {
         for (Pattern elem : patterns) {
             String pattern = elem.getPattern();
             for (int i = 0; i < text.length(); i++) {
@@ -21,11 +22,11 @@ public class SimpleSearch implements SearchingStrategy {
                     }
                 }
                 if (same) {
-                    return elem;
+                    return Optional.of(elem);
                 }
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 }

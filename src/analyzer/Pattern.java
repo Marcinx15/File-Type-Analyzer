@@ -1,6 +1,8 @@
 package analyzer;
 
-public class Pattern {
+import java.util.Comparator;
+
+public class Pattern implements Comparable<Pattern> {
     private final String pattern;
     private final String fileType;
     private final int priority;
@@ -10,6 +12,7 @@ public class Pattern {
         this.fileType = fileType;
         this.priority = priority;
     }
+
 
     public String getPattern() {
         return pattern;
@@ -30,5 +33,10 @@ public class Pattern {
                 ", fileType='" + fileType + '\'' +
                 ", priority=" + priority +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Pattern pattern) {
+        return Comparator.comparingInt(Pattern::getPriority).compare(this, pattern);
     }
 }

@@ -12,6 +12,6 @@ public class Main {
         reader.sortPatternsByPriority();
 
         FileChecker checker = new FileChecker(Path.of(folderPath));
-        checker.printResults(checker.checkFiles(new KmpSearch(), reader.getPatterns()));
+        checker.printResults(checker.checkFiles(new RabinKarpSearch(), reader.getPatterns()));
     }
 }

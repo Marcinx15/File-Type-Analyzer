@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,10 +12,10 @@ import java.util.concurrent.Future;
 
 public class FileChecker {
     private final Path folderPath;
-    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
 
-    public Map<String, Future<Pattern>> checkFiles (SearchingStrategy strategy, List<Pattern> patterns) {
-        Map <String, Future<Pattern>> nameToFutureResult = new HashMap<>();
+    public Map<String, Future<Optional<Pattern>>> checkFiles (SearchingStrategy strategy, List<Pattern> patterns) {
+        Map <String, Future<Optional<Pattern>>> nameToFutureResult = new HashMap<>();
 
         File folder = folderPath.toFile();
         for (File file : Objects.requireNonNull(folder.listFiles())) {
@@ -45,12 +42,13 @@ public class FileChecker {
         this.folderPath = folderPath;
     }
 
-    public void printResults(Map<String, Future<Pattern>> results) {
+    public void printResults(Map<String, Future<Optional<Pattern>>> results) {
         results.forEach((name, result) -> {
             try {
                 var pattern = result.get();
-                System.out.printf("%s: %s", name, pattern != null ? pattern.getFileType() : "Unknown file type");
-                System.out.println();
+                System.out.print(name + ": ");
+                pattern.ifPresentOrElse(s -> System.out.println(s.getFileType()),
+                        () -> System.out.println("Unknown file type"));
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

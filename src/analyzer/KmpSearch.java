@@ -1,11 +1,12 @@
 package analyzer;
 
 import java.util.List;
+import java.util.Optional;
 
 public class KmpSearch implements SearchingStrategy {
 
     @Override
-    public Pattern search(String text, List<Pattern> patterns) {
+    public Optional<Pattern> search(String text, List<Pattern> patterns) {
         for(Pattern elem : patterns) {
             String pattern = elem.getPattern();
 
@@ -27,12 +28,12 @@ public class KmpSearch implements SearchingStrategy {
                 }
 
                 if (patternIndex == pattern.length()) {
-                    return elem;
+                    return Optional.of(elem);
                 }
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     private int[] borderFunction(String word) {
